@@ -16,33 +16,43 @@ Implement and tune Particle Swarm Optimization (PSO) — a population-based meta
 | P4 | Brachistochrone problem (discrete path) | n=15, n=30 |
 | P5 | Inverse problem (parameter identification) | — |
 
-## Files
+## Structure
 
-| File | Description |
-|------|-------------|
-| `particle_swarm_optimizer.py` | Core PSO implementation (static & adaptive) |
-| `bump_test_function_optimize.py` | Hyperparameter search on 2D bump function |
-| `rosenbrock_test_function.py` | P1 — Rosenbrock |
-| `p2_case_study.py` | P2 — Case study |
-| `bump_test_function.py` | P3 — Bump function |
-| `brachistochrone_problem.py` | P4 — Brachistochrone |
-| `inverse_problem.py` | P5 — Inverse problem |
-| `verify_P3_n50.py` | Verifies bonus 50D solution |
-| `best_solution_P3_n50.txt` | Best found solution for 50D bonus |
-| `create_latex_tables.py` | Generates LaTeX result tables |
-| `MeasuredResponse.dat` | Dataset for P2 |
-| `requirements.txt` | Python dependencies |
-| `best_plots/` | Representative convergence plots (13 figures) |
-| `best_solutions/` | Best solution files |
-| `assignment/` | Assignment instructions |
-| `report/` | Submitted report (PDF + LaTeX source) |
+```
+Assignment 1/
+├── particle_swarm_optimizer.py    # Core PSO (static & adaptive)
+├── bump_test_function_optimize.py # Hyperparameter grid search
+├── rosenbrock_test_function.py    # P1
+├── p2_case_study.py               # P2
+├── bump_test_function.py          # P3
+├── brachistochrone_problem.py     # P4
+├── inverse_problem.py             # P5
+├── verify_P3_n50.py               # Verify bonus 50D solution
+├── MeasuredResponse.dat           # Data for P2/P5
+├── requirements.txt
+├── results/
+│   ├── best_plots/                # Best convergence plots per problem
+│   ├── best_solutions/            # Best solution files
+│   ├── best_solution_P3_n50.txt   # Bonus 50D result
+│   ├── latex_adaptive_table.txt   # Result tables (adaptive PSO)
+│   └── latex_static_table.txt     # Result tables (static PSO)
+├── utils/
+│   ├── create_latex_tables.py     # Generate LaTeX tables from results
+│   └── get_top_runs_png_filenames.py
+├── instructions/
+│   ├── Assignment1-1.pdf
+│   └── CaseStudies.pdf
+└── report/
+    ├── AER1415_Assignment_1_ZouhairAdamHamaimou.pdf
+    └── AER1415_Assignment_1_ZouhairAdamHamaimou.tex
+```
 
 ## Running
 
 ```bash
 pip install -r requirements.txt
 
-# Tune hyperparameters
+# Tune hyperparameters first
 python bump_test_function_optimize.py
 
 # Run problems (set dimensions inside script as needed)
@@ -52,6 +62,6 @@ python bump_test_function.py         # P3
 python brachistochrone_problem.py    # P4
 python inverse_problem.py            # P5
 
-# Verify bonus solution
+# Verify bonus 50D solution
 python verify_P3_n50.py
 ```
