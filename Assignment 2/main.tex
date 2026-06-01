@@ -1,0 +1,1297 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AER1415 — Assignment 2
+% Author:  <Your Name Here>
+% Date:    <Submission Date>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt]{article}
+
+% Packages (add others if you need them)
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+% --------------------------------------------------------
+% Custom information
+% --------------------------------------------------------
+\newcommand{\studentname}{Zouhair Adam Hamaimou (1004891986)}
+\newcommand{\coursename}{AER1415: Computational Optimization}
+\newcommand{\assignmentname}{Assignment 2}
+
+% We can optionally control how many heading levels get numbered:
+\setcounter{secnumdepth}{3} % Ensures subsubsections get a number
+
+% 1) Redefine the label for \section
+\renewcommand\thesection{Q\arabic{section}}
+
+% 2) Redefine the label for \subsection
+\renewcommand\thesubsection{(\alph{subsection})}
+
+% 3) Redefine the label for \subsubsection
+\renewcommand\thesubsubsection{\roman{subsubsection}.}
+
+% 4) Automatically reset subordinate counters at each new level
+%    so that subsection numbering restarts for each new section,
+%    and subsubsection numbering restarts for each new subsection.
+\makeatletter
+\@addtoreset{subsection}{section}
+\@addtoreset{subsubsection}{subsection}
+\makeatother
+
+\setlength{\parindent}{0pt}
+\DeclareMathOperator{\tr}{trace}
+
+\begin{document}
+
+% --------------------------------------------------------
+% Title Page
+% --------------------------------------------------------
+\begin{center}
+  \huge \coursename \\
+  \LARGE \assignmentname \\
+  \vspace{1em}
+  \normalsize \studentname
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Q1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Nature of Critical Points}
+
+\subsection{Critical Points and Classification of \( f(x, y) = x^3 - 3x + y^2 \)}
+
+\subsubsection{Finding the Critical Points}
+
+The critical points of \( f \) are the points \( (x, y) \) where the gradient is zero:
+\begin{align*}
+& \mathbf{g} = \nabla f(x, y) = \begin{bmatrix} \frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} \end{bmatrix}^T
+= \begin{bmatrix} 3x^2 - 3 \\ 2y \end{bmatrix}
+= \begin{bmatrix} 0 \\ 0 \end{bmatrix}^T.
+\end{align*}
+
+Solving for \( x \) and \( y \), we obtain:
+\[
+(x, y) \in \{(-1, 0), (1, 0) \}.
+\]
+Thus, the critical points are \( (x_1, y_1) = (-1, 0) \) and \( (x_2, y_2) = (1, 0) \).
+
+\subsubsection{Verification Using Necessary and Sufficient Conditions}
+
+The first-order necessary condition, \( \|\mathbf{g} \| = 0 \), is satisfied at both critical points. To check the second-order sufficient condition, we compute the Hessian matrix:
+
+\begin{align*}
+\mathbf{H} = \nabla^2 f(x,y) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\
+\frac{\partial^2 f}{\partial x \partial y} & \frac{\partial^2 f}{\partial y^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+6x & 0 \\
+0 & 2
+\end{bmatrix}.
+\end{align*}
+
+The eigenvalues of \( \mathbf{H} \) are \( 6x \) and \( 2 \). A matrix is positive definite if all its eigenvalues are positive:
+\begin{itemize}
+    \item At \( (x_2, y_2) = (1, 0) \), the eigenvalues are \( 6(1) = 6 \) and \( 2 \), both positive. This confirms a local minimum.
+    \item At \( (x_1, y_1) = (-1, 0) \), the eigenvalues are \( 6(-1) = -6 \) and \( 2 \). Since one eigenvalue is negative and the other positive, the Hessian is indefinite, indicating a saddle point.
+\end{itemize}
+\subsubsection{Classification of Critical Points}
+
+The classification of critical points is determined by the signs of the eigenvalues of the Hessian matrix \( \mathbf{H} \), computed in the previous section.
+\begin{itemize}
+    \item Since \( \mathbf{H}(-1,0) \) has one negative and one positive eigenvalue, it is indefinite, meaning \( (-1,0) \) is a saddle point.
+    \item Since \( \mathbf{H}(1,0) \) has only positive eigenvalues, it is positive definite, meaning \( (1,0) \) is a strong local minimum.
+\end{itemize}
+
+
+\paragraph{Geometric Justification}
+The function \( f(x, y) = x^3 - 3x + y^2 \) exhibits asymmetric behavior due to the cubic term \( x^3 \), which dominates in the \( x \)-direction. The contour plot in Figure~\ref{fig:contour} confirms the aforementioned classification.
+
+\begin{itemize}
+    \item The saddle point at \( (-1,0) \) is a transition point where \( f(x,y) \) decreases in some directions and increases in others. This is evident in the contour plot where level curves cross at \( (-1,0) \) rather than enclosing a region.
+    \item The local minimum at \( (1,0) \) is enclosed by closed contours, indicating that the function attains a locally lower value there.
+    \item The function is unbounded below, meaning it does not have a global minimum. For large negative \( x \), \( f(x,y) \to -\infty \).
+\end{itemize}
+
+Thus, the geometric interpretation supports our classification using the second-order conditions.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Q1a.png}
+    \caption{Contour plot of \( f(x, y) = x^3 - 3x + y^2 \) with critical points labeled.}
+    \label{fig:contour}
+\end{figure}
+
+\subsection{Analysis of $f(x, y) = x^4 + y^2 $}
+
+\subsubsection{Identification of Critical Points}
+
+The critical points of \( f(x, y) \) are obtained by solving \( \nabla f(x, y) = 0 \):
+
+\begin{align*}
+\mathbf{g} = \nabla f(x, y) &= \begin{bmatrix} \frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} \end{bmatrix}^T 
+= \begin{bmatrix} 4x^3 \\ 2y \end{bmatrix} 
+= \begin{bmatrix} 0 \\ 0 \end{bmatrix}.
+\end{align*}
+
+Solving for \( x \) and \( y \):
+
+\[
+4x^3 = 0 \quad \Rightarrow \quad x = 0, \quad 2y = 0 \quad \Rightarrow \quad y = 0.
+\]
+
+Thus, the only critical point is \( (0,0) \).
+
+\subsubsection{Analysis of Standard Optimality Conditions}
+
+The Hessian matrix of \( f(x, y) \) is:
+
+\begin{align*}
+\mathbf{H} = \nabla^2 f(x,y) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\
+\frac{\partial^2 f}{\partial x \partial y} & \frac{\partial^2 f}{\partial y^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+12x^2 & 0 \\
+0 & 2
+\end{bmatrix}.
+\end{align*}
+
+Evaluating at \( (0,0) \):
+
+\[
+\mathbf{H}(0,0) = 
+\begin{bmatrix}
+0 & 0 \\
+0 & 2
+\end{bmatrix}.
+\]
+
+The eigenvalues of \( \mathbf{H}(0,0) \) are \( 0 \) and \( 2 \). Since the eigenvalues are non-negative, the Hessian is positive semi-definite, meaning the point (0, 0) is a local minimum. However, since one of the eigenvalues is 0, the Hessian test is inconclusive.
+
+\subsubsection{Alternative Approach to Determine the Nature of the Critical Point}
+
+Since the Hessian test is inconclusive, we analyze \( f(x,y) \) directly. Observing the function:
+
+\[
+f(x, y) = x^4 + y^2,
+\]
+
+we note that it is always non-negative, and for any \( (x,y) \),
+
+\[
+f(x,y) \geq 0 \quad \text{with equality only at } (0,0).
+\]
+
+Thus, \( (0,0) \) is a global minimum.
+
+\subsubsection{Boundedness of the Function}
+
+\begin{itemize}
+    \item The function is bounded below since \( f(x,y) \geq 0 \) for all \( (x,y) \), and the minimum value \( f(0,0) = 0 \) is achieved at \( (0,0) \).
+    \item The function is unbounded above, as for large values of \( x \) or \( y \), \( f(x,y) \to \infty \).
+\end{itemize}
+
+Thus, our findings from parts (i)-(iii) confirm that the function has a global minimum at \( (0,0) \) and is not bounded above.
+
+\subsection{Analysis of \( f(x, y) = (y - x^2)^2 \)}
+
+\subsubsection{Finding the Critical Points}
+
+The critical points of \( f(x, y) \) satisfy \( \nabla f(x, y) = 0 \). Computing the gradient:
+
+\begin{align*}
+\mathbf{g} = \nabla f(x, y) &= 
+\begin{bmatrix} 
+\frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} 
+\end{bmatrix}^T 
+= \begin{bmatrix} 2(y - x^2)(-2x) \\ 2(y - x^2) \end{bmatrix} 
+= \begin{bmatrix} -4x(y - x^2) \\ 2(y - x^2) \end{bmatrix}.
+\end{align*}
+
+Setting \( \mathbf{g} = 0 \):
+
+\[
+-4x(y - x^2) = 0, \quad 2(y - x^2) = 0.
+\]
+
+From the second equation, we get \( y = x^2 \). Substituting into the first equation:
+
+\[
+-4x(0) = 0.
+\]
+
+Since this holds for all \( x \), the set of critical points is:
+
+\[
+\{(x, y) \mid y = x^2\}, \quad \text{which forms a parabola in the \( xy \)-plane.}
+\]
+
+\subsubsection{Challenges with Standard Optimality Conditions}
+
+The Hessian matrix is:
+
+\begin{align*}
+\mathbf{H} = \nabla^2 f(x,y) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\
+\frac{\partial^2 f}{\partial x \partial y} & \frac{\partial^2 f}{\partial y^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+12x^2-4y & -4x \\
+-4x & 2
+\end{bmatrix}.
+\end{align*}
+
+Evaluating at the critical points \( (x, x^2) \):
+
+\[
+\mathbf{H}(x, x^2) = 
+\begin{bmatrix}
+8x^2 & -4x \\
+-4x & 2
+\end{bmatrix}.
+\]
+The main challenge is that the Hessian determinant is:
+
+\[
+\det(\mathbf{H}) = (8x^2)(2) - (-4x)(-4x) = 16x^2 - 16x^2 = 0.
+\]
+
+Since the determinant is zero, the Hessian is singular, meaning it is not invertible. This implies that the function's curvature is not well-defined at the critical points. This prevents direct classification of the critical points using the standard second-order sufficient condition, as positive definiteness requires all eigenvalues to be strictly positive.
+
+\subsubsection{Hessian Analysis and Observations}
+
+To classify the critical points, we identify the eigenvalues of \( \mathbf{H} \):
+
+\begin{align*}
+\begin{cases} 
+\det(\mathbf{H}) = \lambda_1\lambda_2 = 0 \\
+\tr(\mathbf{H}) = \lambda_1 + \lambda_2 = 8x^2 + 2
+\end{cases}
+\Rightarrow
+\begin{cases}
+\lambda_1 = 0 \\ \lambda_2 = 8x^2 + 2
+\end{cases}
+\end{align*}
+
+Since one eigenvalue is always zero and the other is always positive, the Hessian matrix is positive semi-definite for all \( x \). Since it is not positive definite (one eigenvalue is zero), the second-order sufficient condition for a strict local minimum does not hold.
+
+\subsubsection{Geometric Interpretation and Global Behavior}
+
+The function \( f(x, y) = (y - x^2)^2 \) represents the squared deviation of \( y \) from the parabola \( y = x^2 \). 
+
+\begin{itemize}
+    \item Since \( f(x,y) \) is a squared term, it is always non-negative.
+    \item The minimum value of \( f(x,y) \) is zero, which occurs when \( y = x^2 \).
+    \item This means the function does not have isolated minima but instead has a continuous set of global minima along the curve \( y = x^2 \).
+    \item The function grows quadratically as \( y \) moves away from \( x^2 \), making \( y = x^2 \) the lowest point for every \( x \).
+\end{itemize}
+
+To visualize this behavior, consider the contour plot in Figure~\ref{fig:Q1c}. The level curves illustrate how the function increases as \( y \) moves away from \( x^2 \), confirming that the global minima lie along the red curve \( y = x^2 \).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Q1c.png}
+    \caption{Contour plot of \( f(x, y) = (y - x^2)^2 \) showing global minima along \( y = x^2 \).}
+    \label{fig:Q1c}
+\end{figure}
+
+
+\subsection{Analysis of $f(x,y)=x^3+xy^3$}
+\subsubsection{Finding the Critical Points}
+
+The critical points of \( f(x, y) \) satisfy \( \nabla f(x, y) = 0 \). Computing the gradient:
+
+\begin{align*}
+\mathbf{g} = \nabla f(x, y) &= 
+\begin{bmatrix} 
+\frac{\partial f}{\partial x} & \frac{\partial f}{\partial y} 
+\end{bmatrix}^T 
+= \begin{bmatrix} 3x^2 + y^3 \\ 3x y^2 \end{bmatrix}.
+\end{align*}
+
+\[
+\mathbf{g} = \mathbf{0} \Rightarrow 3x^2 + y^3 = 0, \quad 3x y^2 = 0.
+\]
+
+\begin{itemize}
+    \item From \( 3x y^2 = 0 \), we get either \( x = 0 \) or \( y = 0 \).
+    \item If \( x = 0 \), then from \( 3x^2 + y^3 = 0 \), we get \( y^3 = 0 \Rightarrow y = 0 \).
+    \item If \( y = 0 \), then \( 3x^2 = 0 \Rightarrow x = 0 \).
+\end{itemize}
+
+Thus, the only critical point is \( (0,0) \).
+
+\subsubsection{Hessian Analysis}
+
+The Hessian matrix of \( f(x, y) \) is:
+
+\begin{align*}
+\mathbf{H} = \nabla^2 f(x,y) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\
+\frac{\partial^2 f}{\partial x \partial y} & \frac{\partial^2 f}{\partial y^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+6x & 3y^2 \\
+3y^2 & 6xy
+\end{bmatrix}.
+\end{align*}
+
+Evaluating at \( (0,0) \):
+
+\[
+\mathbf{H}(0,0) = 
+\begin{bmatrix}
+0 & 0 \\
+0 & 0
+\end{bmatrix}.
+\]
+
+Since all entries are zero, the Hessian matrix is the \textit{zero matrix}, which means both eigenvalues are zero. This makes the Hessian \textit{inconclusive} for classifying the critical point.
+
+\subsubsection{Higher-Order Methods for Inconclusive Cases}
+
+Since the Hessian test is inconclusive at \( (0,0) \) (all second-order partial derivatives vanish), we expand \( f(x,y) \) using the third-order Taylor series around \( (0,0) \). The third-order Taylor series of a function \( f(x,y) \) centered at \( (0,0) \) is given by:
+
+\[
+f(x, y) = f(0,0) + \nabla f(0,0) \cdot \begin{bmatrix} x \\ y \end{bmatrix} 
++ \frac{1}{2} \begin{bmatrix} x & y \end{bmatrix}^T \mathbf{H}(0,0) \begin{bmatrix} x \\ y \end{bmatrix}
++ \frac{1}{6} \sum_{i,j,k} \frac{\partial^3 f}{\partial x_i \partial x_j \partial x_k} x_i x_j x_k + \mathcal{O}(4).
+\]
+
+Since \( f(0,0) = 0 \), \( \nabla f(0,0) = 0 \), and \( \mathbf{H}(0,0) = 0 \), the Taylor series reduces to:
+
+\[
+f(x, y) \approx \frac{1}{6} \left( x^3 \frac{\partial^3 f}{\partial x^3} + 3x^2y \frac{\partial^3 f}{\partial x^2 \partial y} 
++ 3xy^2 \frac{\partial^3 f}{\partial x \partial y^2} + y^3 \frac{\partial^3 f}{\partial y^3} \right).
+\]
+
+We compute the third-order derivatives of \( f(x, y) = x^3 + xy^3 \):
+
+\[
+\frac{\partial^3 f}{\partial x^3} = 6, \quad
+\frac{\partial^3 f}{\partial x^2 \partial y} = 0, \quad
+\frac{\partial^3 f}{\partial x \partial y^2} = 6y, \quad
+\frac{\partial^3 f}{\partial y^3} = 6x.
+\]
+
+Substituting these into the Taylor series:
+
+\[
+f(x, y) \approx \frac{1}{6} \left( 6x^3 + 3xy^2(6y) + y^3(6x) \right)
+ =  x^3 + 4xy^3.
+\]
+
+A necessary condition for a local minimum at \( (0,0) \) is that \( f(x, y) \) is nonnegative in a neighborhood around the origin. This requires:
+
+\[
+x^3 + 4xy^3 \geq 0 \quad \text{for all sufficiently small } (x,y).
+\]
+
+To check this:
+\begin{itemize}
+\item If \( x > 0 \) and \( y > 0 \), then \( x^3 + 4xy^3 > 0 \).
+\item If \( x < 0 \) and \( y = 0 \), then \( x^3 < 0 \), contradicting nonnegativity.
+\item If \( x > 0 \) and \( y = 0 \), then \( x^3 > 0 \), satisfying the condition.
+\item If \( x < 0 \) and \( y > 0 \), then \( x^3 + 4xy^3 < 0\), contradicting nonnegativity.
+
+\end{itemize}
+
+Since the function takes both positive and negative values arbitrarily close to (0,0), it cannot be a local minimum. This confirms that \( (0,0) \) is not a local minimum or maximum. Instead, it behaves as a saddle point.
+
+\subsubsection{Behavior Along Different Paths}
+
+To further understand the behavior of \( f(x,y) \), we analyze its values along different paths:
+
+\begin{itemize}
+    \item Along the \( x \)-axis (\( y = 0 \)): \( f(x, 0) = x^3 \). This function is negative when \( x < 0 \) and positive when \( x > 0 \).
+    \item Along the \( y \)-axis (\( x = 0 \)): \( f(0, y) = 0 \), which remains constant at zero for all values of \( y \).
+    \item Along diagonal lines of the form \( y = mx \):  
+    \[
+    f(x, mx) = x^3 + m^3 x^4.
+    \]
+    For small values of \( x \), the dominant term is \( x^3 \), meaning that the function behaves similarly to \( x^3 \).
+\end{itemize}
+
+Since the function takes on both positive and negative values along different paths, the point \( (0,0) \) is not a local minimum or maximum. Instead, it behaves as a saddle point.
+
+Thus, although the Hessian test is inconclusive, an analysis of higher-order terms and directional behavior confirms that \( (0,0) \) is a saddle point.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Q2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Steepest descent method for convex quadratics}
+
+\subsection{Formulation and implementation}
+Given the quadratic objective function:
+
+\[
+f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^T \mathbf{A} \mathbf{x} -\mathbf{x}^T \mathbf{b},
+\]
+
+where \( \mathbf{A} \in \mathbb{R}^{n \times n} \) is symmetric positive definite (SPD), we derive the exact step size \( \alpha^* \) in gradient descent with line search.
+
+\subsubsection{Line Search Update Rule}
+
+The next iterate in the descent method is given by:
+
+\[
+\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha \mathbf{p}_k.
+\]
+
+The goal is to find \( \alpha^* \) that minimizes \( f(\mathbf{x}) \) along the descent direction \( \mathbf{p}_k \).
+
+\subsubsection{Line Search Subproblem}
+
+Substituting \( \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha \mathbf{p}_k \) into \( f(\mathbf{x}) \):
+
+\[
+f(\mathbf{x}_k + \alpha \mathbf{p}_k) = \frac{1}{2} (\mathbf{x}_k + \alpha \mathbf{p}_k)^T \mathbf{A} (\mathbf{x}_k + \alpha \mathbf{p}_k) - (\mathbf{x}_k + \alpha \mathbf{p}_k)^T\mathbf{b}.
+\]
+
+Expanding the quadratic terms:
+
+\begin{align*}
+f(\mathbf{x}_k + \alpha \mathbf{p}_k) &= \frac{1}{2} \left( \mathbf{x}_k^T \mathbf{A} \mathbf{x}_k + 2\alpha \mathbf{p}_k^T \mathbf{A} \mathbf{x}_k + \alpha^2 \mathbf{p}_k^T \mathbf{A} \mathbf{p}_k \right) - \mathbf{x}_k^T\mathbf{b} - \alpha \mathbf{p}_k^T\mathbf{b}. 
+\end{align*}
+
+Rearranging:
+
+\[
+f(\mathbf{x}_k + \alpha \mathbf{p}_k) = \frac{1}{2} \mathbf{x}_k^T \mathbf{A} \mathbf{x}_k - \mathbf{x}_k^T\mathbf{b} + \alpha \mathbf{p}_k^T (\mathbf{A} \mathbf{x}_k - \mathbf{b}) + \frac{1}{2} \alpha^2 \mathbf{p}_k^T \mathbf{A} \mathbf{p}_k.
+\]
+
+Since the first two terms are constant with respect to \( \alpha \), we define a univariate function in \( \alpha \):
+
+\[
+g(\alpha) = \frac{1}{2} \alpha^2 \mathbf{p}_k^T \mathbf{A} \mathbf{p}_k + \alpha \mathbf{p}_k^T (\mathbf{A} \mathbf{x}_k - \mathbf{b}).
+\]
+
+\subsubsection{Differentiate and Solve for \( \alpha^* \)}
+
+To find the optimal step size \( \alpha^* \), take the derivative:
+
+\[
+\frac{d g}{d \alpha} = \mathbf{p}_k^T \mathbf{A} \mathbf{p}_k \alpha + \mathbf{p}_k^T (\mathbf{A} \mathbf{x}_k - \mathbf{b}).
+\]
+
+Setting \( \frac{d g}{d \alpha} = 0 \) and solving for \( \alpha^* \):
+
+\[
+\alpha^* = -\frac{\mathbf{p}_k^T (\mathbf{A} \mathbf{x}_k - \mathbf{b})}{\mathbf{p}_k^T \mathbf{A} \mathbf{p}_k}.
+\]
+
+\subsubsection{Implementation}
+\begin{enumerate}
+    \item \textbf{Initialize:}  
+    Select an initial guess \( \mathbf{x}_0 \).  
+    Set the iteration counter \( k = 0 \) and the total number of iterations \( N = 1000 \).
+    
+    \item \textbf{Repeat for \( k = 0, 1, \dots, N-1 \):}
+    
+    \begin{enumerate}
+        \item \textbf{Compute the gradient:}  
+        \[
+        \mathbf{g}(\mathbf{x}_k) = \nabla f(\mathbf{x}_k) = \mathbf{A} \mathbf{x}_k - \mathbf{b}.
+        \]
+        Set the search direction as:
+        \[
+        \mathbf{p}_k = -\mathbf{g}(\mathbf{x}_k).
+        \]
+        
+        \item \textbf{Exact Line Search:}  
+        Compute the step size \( \alpha_k \) using the exact formula:
+        \[
+        \alpha_k = -\frac{\mathbf{p}_k^T \mathbf{g}(\mathbf{x}_k)}{\mathbf{p}_k^T \mathbf{A} \mathbf{p}_k}.
+        \]
+        
+        \item \textbf{Update the current point:}  
+        \[
+        \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k.
+        \]
+        
+    \end{enumerate}
+    
+    \item \textbf{End after 1000 iterations:}  
+    After completing \( N = 1000 \) iterations, return \( \mathbf{x}_{1000} \) as the final estimate.
+    
+\end{enumerate}
+\subsection{Performance Analysis}
+
+\subsubsection{Best Results}
+
+The best results achieved across the 10 trials are as follows:
+
+\begin{itemize}
+    \item \textbf{Lowest gradient norm achieved within 1000 iterations:} \( 0.002646 \)
+    \item \textbf{Lowest objective function value achieved within 1000 iterations:} \( -9.453960 \)
+\end{itemize}
+
+\subsubsection{Convergence Analysis}
+
+The following plots illustrate the convergence behavior of the method across all trials.
+
+Figure~\ref{fig:obj_all} shows the evolution of the objective function value across all trials. The function value decreases significantly within the first few iterations, indicating rapid progress towards the optimal region. Beyond this point, the rate of improvement slows down.
+
+To better visualize the stabilization of the objective function values, Figure~\ref{fig:obj_zoomed} provides a zoomed-in view, focusing on the region where the function values stabilize. This highlights that after around 400 iterations, the improvements are minor.
+\clearpage
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{objective_function_all_trials.png}
+        \caption{Full view of the objective function value across all trials.}
+        \label{fig:obj_all}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{objective_function_zoomed.png}
+        \caption{Zoomed-in view of the objective function value, restricted to the range \([-11,50]\).}
+        \label{fig:obj_zoomed}
+    \end{subfigure}
+    \caption{Objective function value evolution over 1000 iterations.}
+\end{figure}
+
+
+Figure~\ref{fig:grad_norm} shows the gradient norm plotted on a logarithmic scale. The norm decreases exponentially over iterations, confirming the expected convergence behavior of steepest descent. Most trials reach a gradient norm below \( 10^{-1} \), which suggests significant reduction in the gradient magnitude, leading to near-optimal solutions.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{gradient_norm_all_trials.png}
+    \caption{Gradient norm across all trials, plotted on a logarithmic scale.}
+    \label{fig:grad_norm}
+\end{figure}
+
+\clearpage
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Q3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Quasi-Newton Method with BFGS Hessian Approximation}
+\subsection{Implementation}
+
+A quasi-Newton optimization algorithm was implemented using the BFGS Hessian approximation scheme to solve unconstrained optimization problems. The method iteratively refines an approximation of the inverse Hessian to improve convergence efficiency compared to first-order methods.
+
+\subsubsection{Algorithm Description}
+
+The BFGS algorithm follows these steps:
+
+\begin{enumerate}
+    \item \textbf{Initialize:} Choose an initial point \( \mathbf{x}_0 \), set tolerance values $\epsilon_g$ and $\epsilon_r$, maximum number of iterations $N$, and initialize the Hessian inverse approximation as \( \mathbf{B}_0^{-1} = \mathbf{I} \).
+    \item \textbf{Compute the gradient:} \( \mathbf{g}_k = \nabla f(\mathbf{x}_k) \). If \( \|\mathbf{g}_k\|_2 \leq \epsilon_g \), stop.
+    \item \textbf{Compute search direction:} \( \mathbf{p}_k = -\mathbf{B}_k^{-1} \mathbf{g}_k \).
+    \item \textbf{Perform backtracking line search:} Determine step size \( \alpha_k \) using Armijo’s condition.
+    \item \textbf{Update the point:} \( \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k \).
+    \item \textbf{Evaluate convergence:} If \( |f(\mathbf{x}_{k+1}) - f(\mathbf{x}_k)| \leq \epsilon_r |f(\mathbf{x}_k)| \) for two consecutive iterations, stop.
+    \item \textbf{Compute update terms:}
+    \begin{align*}
+        \mathbf{s}_k = \mathbf{x}_{k+1} - \mathbf{x}_k = \alpha_k \mathbf{p}_k, \quad
+        \mathbf{y}_k = \mathbf{g}_{k+1} - \mathbf{g}_k, \quad
+        \rho_k = \frac{1}{\mathbf{y}_k^T \mathbf{s}_k}.
+    \end{align*}
+    \item \textbf{Update the inverse Hessian approximation:}
+    \begin{align*}
+        \mathbf{B}_{k+1}^{-1} = \left( \mathbf{I} - \rho_k \mathbf{s}_k \mathbf{y}_k^T \right) \mathbf{B}_k^{-1} 
+        \left( \mathbf{I} - \rho_k \mathbf{y}_k \mathbf{s}_k^T \right) + \rho_k \mathbf{s}_k \mathbf{s}_k^T.
+    \end{align*}
+    \item Set \( k = k+1 \) and return to step 2
+\end{enumerate}
+
+\subsubsection{Backtracking Line Search}
+
+The step size \( \alpha_k \) is determined using a backtracking line search satisfying Armijo’s sufficient decrease condition. The procedure follows:
+
+\begin{enumerate}
+    \item Choose an initial step length \( \bar{\alpha} \) (typically \( 0 < \bar{\alpha} < 1 \)).
+    \item If
+    $
+    f(\mathbf{x}_k + \alpha_k \mathbf{p}_k) \leq f(\mathbf{x}_k) + \mu_1 \alpha_k \mathbf{g}_k^T \mathbf{p}_k,
+    $
+    then accept \( \alpha_k = \alpha \) and stop.
+    \item Otherwise, reduce \( \alpha \) by a factor \( \rho \): \( \alpha = \rho \alpha \) (typically \( 0 < \rho < 1 \)).
+    \item Repeat until the condition is satisfied.
+\end{enumerate}
+
+The default parameters used are:
+\[
+\epsilon_g = 10^{-6}, \quad \epsilon_r = 10^{-6}, \quad N = 10^4, \quad \mu_1 = 10^{-4}, \quad \rho = 0.5.
+\]
+
+
+\subsubsection{Pseudocode}
+\begin{algorithm}[H]
+    \caption{BFGS Quasi-Newton Algorithm}
+    \begin{algorithmic}[1]
+        \STATE \textbf{Input:} Initial point \( \mathbf{x}_0 \), tolerances \( \epsilon_g, \epsilon_r \), max iterations \( N \), line search parameters $\mu_1, \rho$
+        \STATE \textbf{Initialize:} \( \mathbf{B}_0^{-1} = \mathbf{I} \), \( k = 0 \)
+        \STATE Compute \( f(\mathbf{x}_0) = f(\mathbf{x}_0) \)
+        \STATE Compute \( \mathbf{g}_0 = \nabla f(\mathbf{x}_0) \)
+        \WHILE{\( k < N \)}
+            \IF{\( \|\mathbf{g}_k\|_2 \leq \epsilon_g \)}
+                \STATE \textbf{Return} \( \mathbf{x}_k \) \quad (Gradient norm below tolerance)
+            \ENDIF
+            \STATE Compute search direction \( \mathbf{p}_k = -\mathbf{B}_k^{-1} \mathbf{g}_k \)
+            \STATE Set initial step size \( \alpha_k \in (0,1) \)
+            \WHILE{ \( f(\mathbf{x}_k + \alpha_k \mathbf{p}_k) > f(\mathbf{x}_k) + \mu_1 \alpha_k \mathbf{g}_k^T \mathbf{p}_k \) }
+                \STATE Update \( \alpha_k \gets \rho \alpha_k \)  
+            \ENDWHILE
+            \STATE Update \( \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k \)
+            \STATE Compute \( \mathbf{g}_{k+1} = \nabla f(\mathbf{x}_{k+1}) \)
+            \STATE Compute \( f_{k+1} = f(\mathbf{x}_{k+1}) \)
+            \IF{ \( |f(\mathbf{x}_{k+1}) - f(\mathbf{x}_{k})| \leq \epsilon_r |f(\mathbf{x}_{k})| \) for two consecutive iterations}
+                \STATE \textbf{Return} \( \mathbf{x}_{k+1} \) \quad (Objective function has converged)
+            \ENDIF
+            \STATE \( \mathbf{s}_k = \mathbf{x}_{k+1} - \mathbf{x}_k = \alpha_k \mathbf{p}_k \)
+            \STATE \( \mathbf{y}_k = \mathbf{g}_{k+1} - \mathbf{g}_k \)
+            \STATE \( \rho_k = 1 / (\mathbf{y}_k^T \mathbf{s}_k) \)
+            \IF{\( \mathbf{y}_k^T \mathbf{s}_k \approx 0 \)}
+                \STATE \( \mathbf{B}_{k+1}^{-1} = \mathbf{B}_k^{-1} \)
+            \ELSE
+                \STATE \( \mathbf{B}_{k+1}^{-1} = (\mathbf{I} - \rho_k \mathbf{s}_k \mathbf{y}_k^T) \mathbf{B}_k^{-1} (\mathbf{I} - \rho_k \mathbf{y}_k \mathbf{s}_k^T) + \rho_k \mathbf{s}_k \mathbf{s}_k^T \)
+            \ENDIF
+            \STATE \( k \gets k + 1 \)
+        \ENDWHILE
+        \STATE \textbf{Return} \( \mathbf{x}_N \) \quad (Reached max iterations)
+    \end{algorithmic}
+\end{algorithm}
+
+
+
+\subsubsection{Implementation Details}
+
+The algorithm includes the following safeguards:
+
+\begin{itemize}
+    \item \textbf{Hessian Initialization:} The inverse Hessian approximation starts as \( \mathbf{I} \).
+    \item \textbf{Numerical Stability:} To prevent division by small values, the update is skipped if \( \mathbf{y}_k^T \mathbf{s}_k \) is too close to zero.
+    \item \textbf{Termination Criteria:} The algorithm stops if:
+    \begin{itemize}
+        \item \( \|\nabla f(\mathbf{x}_k)\| \) falls below a predefined threshold.
+        \item The maximum number of iterations is reached.
+        \item The relative change in function value is below a threshold for two consecutive iterations.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Performance Analysis}
+
+\subsubsection{Test Function and Experimental Setup}
+
+The Rosenbrock function, a standard test function for optimization, was used to evaluate the BFGS method. Tests were conducted for \( n = 2 \) and \( n = 5 \). For each case, 10 random initial points were sampled from \( [-5,5]^n \). The BFGS method was compared against the steepest gradient descent (SGD) algorithm using the same backtracking line search parameters.
+
+\subsubsection{Summary of Results}
+
+Table~\ref{tab:bfgs_vs_sd} below summarizes key performance metrics for the two methods:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lccc}
+        \hline
+        \textbf{Method} & \textbf{Avg. Iterations} & \textbf{Avg. Evaluations} & \textbf{Success Rate} \\
+        \hline
+        \multicolumn{4}{c}{$n = 2$} \\
+        \textbf{BFGS} & 33.5 & 89.1 & 100\% \\
+        \textbf{SGD} & 5658.3 & 60941.0 & 60\% \\
+        \hline
+        \multicolumn{4}{c}{$n = 5$} \\
+        \textbf{BFGS} & 55.2 & 164.3 & 60\% \\
+        \textbf{SGD} & 5756.4 & 65220.5 & 50\% \\
+        \hline
+    \end{tabular}
+    \caption{Performance comparison between BFGS and Steepest Descent.}
+    \label{tab:bfgs_vs_sd}
+\end{table}
+
+Where the success rate is defined as the percentage of trials where the final gradient norm was below \( 10^{-3} \).
+
+The BFGS method consistently outperforms Steepest Gradient Descent (SGD) in terms of convergence speed, requiring significantly fewer iterations and function evaluations. For $n=2$, BFGS successfully reached the optimal solution in all trials, while Steepest Descent only succeeded 60\% of the time. For $n=5$, the success rate of BFGS dropped to 60\%, highlighting the increasing difficulty of optimization in higher dimensions, while Steepest Descent performed worse with only a 50\% success rate. The optimal solutions found by both methods align closely with the true minimizer of the Rosenbrock function, $\mathbf{x}^* = \mathbf{1}$. However, Steepest Descent required an order of magnitude more function evaluations and iterations to reach comparable results. 
+
+\subsubsection{Convergence Analysis}
+
+Figures~\ref{fig:bfgs_obj_n2} and \ref{fig:sd_obj_n2} illustrate the convergence of the objective function value for BFGS and Steepest Descent when optimizing the Rosenbrock function for $n=2$. The BFGS method exhibits rapid convergence, reducing the function value within a small number of iterations. In contrast, the Steepest Descent method requires significantly more iterations to achieve similar reductions in objective value. The superlinear convergence of BFGS is evident, as the objective function drops by several orders of magnitude within a few iterations.
+
+Figures~\ref{fig:bfgs_grad_n2} and \ref{fig:sd_grad_n2} show the gradient norm convergence on a logarithmic scale for $n=2$. The BFGS method again demonstrates faster gradient norm reduction compared to Steepest Descent, highlighting its efficiency in reducing the gradient magnitude. The Steepest Descent method, while eventually converging, does so at a much slower rate.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bfgs_obj_all_trials_n2.png}
+        \caption{BFGS convergence of objective function value for $n=2$.}
+        \label{fig:bfgs_obj_n2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/sd_obj_all_trials_n2.png}
+        \caption{Steepest Descent convergence of objective function value for $n=2$.}
+        \label{fig:sd_obj_n2}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bfgs_grad_all_trials_n2.png}
+        \caption{BFGS convergence of gradient norm (log scale) for $n=2$.}
+        \label{fig:bfgs_grad_n2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/sd_grad_all_trials_n2.png}
+        \caption{Steepest Descent convergence of gradient norm (log scale) for $n=2$.}
+        \label{fig:sd_grad_n2}
+    \end{subfigure}
+    \caption{Comparison of BFGS and Steepest Descent convergence for $n=2$.}
+\end{figure}
+
+A similar trend is observed in Figures~\ref{fig:bfgs_obj_n5} and \ref{fig:sd_obj_n5}, which depict the objective function convergence for $n=5$. As problem dimensionality increases, BFGS continues to outperform Steepest Descent in terms of the speed of convergence. Figures~\ref{fig:bfgs_grad_n5} and \ref{fig:sd_grad_n5} further confirm that BFGS reduces the gradient norm much more efficiently, showcasing its superior performance in higher dimensions.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bfgs_obj_all_trials_n5.png}
+        \caption{BFGS convergence of objective function value for $n=5$.}
+        \label{fig:bfgs_obj_n5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/sd_obj_all_trials_n5.png}
+        \caption{Steepest Descent convergence of objective function value for $n=5$.}
+        \label{fig:sd_obj_n5}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bfgs_grad_all_trials_n5.png}
+        \caption{BFGS convergence of gradient norm (log scale) for $n=5$.}
+        \label{fig:bfgs_grad_n5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/sd_grad_all_trials_n5.png}
+        \caption{Steepest Descent convergence of gradient norm (log scale) for $n=5$.}
+        \label{fig:sd_grad_n5}
+    \end{subfigure}
+    \caption{Comparison of BFGS and Steepest Descent convergence for $n=5$.}
+\end{figure}
+
+To directly compare the best-performing trials of each method, Figures~\ref{fig:best_bfgs_sd_obj_n2} and \ref{fig:best_bfgs_sd_grad_n2} compare the objective function and gradient norm of the best (in terms of final objective function value) BFGS and Steepest Descent trials for $n=2$. The steepest descent trial shows a significantly slower convergence rate, with function values and gradient norms decreasing at a much lower rate. Figures~\ref{fig:best_bfgs_sd_obj_n5} and \ref{fig:best_bfgs_sd_grad_n5} extend this comparison to $n=5$.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/best_bfgs_vs_best_sd_obj_n2.png}
+        \caption{Best BFGS vs. Best Steepest Descent objective function value for $n=2$.}
+        \label{fig:best_bfgs_sd_obj_n2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/best_bfgs_vs_best_sd_grad_n2.png}
+        \caption{Best BFGS vs. Best Steepest Descent gradient norm for $n=2$.}
+        \label{fig:best_bfgs_sd_grad_n2}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/best_bfgs_vs_best_sd_obj_n5.png}
+        \caption{Best BFGS vs. Best Steepest Descent objective function value for $n=5$.}
+        \label{fig:best_bfgs_sd_obj_n5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/best_bfgs_vs_best_sd_grad_n5.png}
+        \caption{Best BFGS vs. Best Steepest Descent gradient norm for $n=5$.}
+        \label{fig:best_bfgs_sd_grad_n5}
+    \end{subfigure}
+    \caption{Comparison of the best BFGS and Steepest Descent trials.}
+\end{figure}
+
+Overall, these results confirm that BFGS consistently outperforms Steepest Descent in terms of convergence speed, making it a more efficient optimization algorithm for solving the Rosenbrock function.
+
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Q4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Barzilai-Borwein (BB) Method}
+\subsection{Implementation Details}
+
+The Barzilai-Borwein (BB) method is an optimization algorithm that extends the steepest descent approach by using a step size inspired by quasi-Newton methods. Unlike the steepest descent method, which employs exact line search at every step, BB dynamically adjusts the step size based on curvature information.
+
+\subsubsection{Algorithm}
+\begin{enumerate}
+    \item \textbf{Initialize:}  
+    Select an initial guess \( \mathbf{x}_0 \).  
+    Set the iteration counter \( k = 0 \) and the total number of iterations \( N = 1000 \).
+
+    \item \textbf{First Iteration (Steepest Descent with Exact Line Search):}
+    
+    \begin{enumerate}
+        \item \textbf{Compute the gradient:}  
+        \[
+        \mathbf{g}(\mathbf{x}_k) = \nabla f(\mathbf{x}_k) = \mathbf{A} \mathbf{x}_k - \mathbf{b}.
+        \]
+        Set the search direction as:
+        \[
+        \mathbf{p}_k = -\mathbf{g}(\mathbf{x}_k).
+        \]
+
+        \item \textbf{Exact Line Search:}  
+        Compute the step size \( \alpha_k \) using the exact formula:
+        \[
+        \alpha_k = -\frac{\mathbf{p}_k^T \mathbf{g}(\mathbf{x}_k)}{\mathbf{p}_k^T \mathbf{A} \mathbf{p}_k}.
+        \]
+
+        \item \textbf{Update the current point:}  
+        \[
+        \mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{p}_k.
+        \]
+    \end{enumerate}
+
+    \item \textbf{Subsequent Iterations (BB Step Size Formula):}  
+    For \( k = 1, \dots, N-1 \):
+
+    \begin{enumerate}
+        \item \textbf{Compute the gradient:}  
+        \[
+        \mathbf{g}(\mathbf{x}_k) = \mathbf{A} \mathbf{x}_k - \mathbf{b}.
+        \]
+
+        \item \textbf{Compute the difference vectors:}  
+        \[
+        \mathbf{s}_{k} = \mathbf{x}_k - \mathbf{x}_{k-1}, \quad
+        \mathbf{y}_{k} = \mathbf{g}(\mathbf{x}_k) - \mathbf{g}(\mathbf{x}_{k-1}).
+        \]
+
+        \item \textbf{Compute the BB step size:}  
+        \[
+        \alpha_k = \frac{\mathbf{s}_{k}^T \mathbf{s}_{k}}{\mathbf{s}_{k}^T \mathbf{y}_{k}}.
+        \]
+
+        \item \textbf{Update the current point:}  
+        \[
+        \mathbf{x}_{k+1} = \mathbf{x}_k - \alpha_k \mathbf{g}(\mathbf{x}_k).
+        \]
+    \end{enumerate}
+
+    \item \textbf{End after 1000 iterations:}  
+    After completing \( N = 1000 \) iterations, return \( \mathbf{x}_{1000} \) as the final estimate.
+\end{enumerate}
+
+\subsection{Analysis of Non-Monotonic Convergence}
+
+This section examines the non-monotonic behavior of the Barzilai-Borwein (BB) method, comparing its convergence characteristics to the steepest descent (SD) method with exact line search. The analysis includes statistical summaries of total iterations to convergence, non-monotonicity rates, and maximum increases in objective function values.
+
+\subsubsection{Representative Trials}
+
+To illustrate non-monotonic behavior, three representative trials were selected: Trial 2 (fastest), Trial 7 (median), and Trial 5 (slowest) based on total iterations to convergence.
+
+\subsubsection{Statistical Summary}
+
+Table~\ref{tab:bb_stats} presents the full results for all 10 trials, detailing the total iterations to convergence, non-monotonicity rates, and the maximum observed increase in objective function value. The trials are ordered based on total iterations to convergence, with the fastest converging trial listed first. At the bottom of the table, summary statistics including the mean, standard deviation, minimum, and maximum values for each metric are provided to offer a broader perspective on the overall performance of the BB method across different initializations.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccc}
+        \hline
+        Trial & Total Iterations  & Non-Monotonic & Maximum Increase  \\
+        & to Convergence & Rate (\%) & in Objective Value \\
+        \hline
+        2  & 201 & 20.4 & 142480.57 \\
+        3  & 213 & 18.2 & 64277.91 \\
+        4  & 238 & 19.3 & 79934.01 \\
+        9  & 240 & 20.4 & 144895.98 \\
+        6  & 258 & 14.5 & 33420.93 \\
+        7  & 262 & 17.3 & 65287.40 \\
+        1  & 276 & 19.6 & 34675.53 \\
+        8  & 296 & 14.3 & 148695.49 \\
+        10 & 308 & 20.8 & 33181.46 \\
+        5  & 315 & 21.7 & 78412.28 \\
+        \hline
+        Mean & 260.70 & 18.65 & 82526.16 \\
+        Std Dev & 36.69 & 2.44 & 44331.29 \\
+        Min & 201 & 14.30 & 33181.46 \\
+        Max & 315 & 21.70 & 148695.49 \\
+        \hline
+    \end{tabular}
+    \caption{Full results and statistical analysis of BB method performance across 10 trials.}
+    \label{tab:bb_stats}
+\end{table}
+
+\subsubsection{Convergence Behavior}
+
+Figure~\ref{fig:bb_vs_sd_obj} shows the evolution of the objective function value for the representative trials, including zoomed-in versions (right) highlighting the stabilization phase of the function values. 
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_trial2.png}
+        \caption{Trial 2 (Min Iterations)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_zoom_trial2.png}
+        \caption{Zoomed-in view for Trial 2.}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_trial5.png}
+        \caption{Trial 5 (Max Iterations)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_zoom_trial5.png}
+        \caption{Zoomed-in view for Trial 5.}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_trial7.png}
+        \caption{Trial 7 (Median Iterations)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_obj_zoom_trial7.png}
+        \caption{Zoomed-in view for Trial 7.}
+    \end{subfigure}
+    \caption{Comparison of BB and SD objective function value convergence.}
+    \label{fig:bb_vs_sd_obj}
+\end{figure}
+
+
+\subsubsection{Gradient Norm Analysis}
+
+The gradient norm convergence is presented in Figure~\ref{fig:bb_vs_sd_grad}, where BB shows a rapid reduction in gradient magnitude compared to SD.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_grad_trial2.png}
+        \caption{Trial 2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_grad_trial5.png}
+        \caption{Trial 5}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_vs_sd_grad_trial7.png}
+        \caption{Trial 7}
+    \end{subfigure}
+    \caption{Gradient norm convergence for representative trials.}
+    \label{fig:bb_vs_sd_grad}
+\end{figure}
+
+\subsubsection{Best Achieved Results}
+
+The best results achieved within 1000 iterations for the BB method are:
+\begin{itemize}
+    \item \textbf{Lowest objective function value:} \( -9.453962 \)
+    \item \textbf{Lowest gradient norm:} \( 0.000000 \)
+\end{itemize}
+
+For comparison, the best results achieved with steepest descent using exact line search were:
+\begin{itemize}
+    \item \textbf{Lowest objective function value:} \( -9.453960 \)
+    \item \textbf{Lowest gradient norm:} \( 0.002646 \)
+\end{itemize}
+
+\subsubsection{Non-Monotonic Behavior Analysis}
+
+Figure~\ref{fig:bb_nonmonotonicity} provides a statistical overview of non-monotonic behavior across all trials.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_max_increase_distribution.png}
+        \caption{Distribution of maximum increase in objective value.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_non_monotonic_distribution.png}
+        \caption{Distribution of non-monotonic step percentage.}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{plots/bb_total_iters_distribution.png}
+        \caption{Distribution of total iterations to convergence.}
+    \end{subfigure}
+    \caption{Statistical analysis of BB method's non-monotonic behavior.}
+    \label{fig:bb_nonmonotonicity}
+\end{figure}
+
+The BB method exhibits non-monotonic behavior across all trials, with an average of \(18.65\%\) of iterations experiencing an increase in function value. The non-monotonicity rate varies between \(14.3\%\) and \(21.7\%\), suggesting moderate variation across different initial points. However, there is no clear monotonic trend between the percentage of non-monotonic steps and the total iterations to convergence.
+
+\smallskip
+
+Looking at the distribution of total iterations to convergence, the fastest trials (Trials 2, 3, and 4) have non-monotonic rates ranging from \(18.2\%\) to \(20.4\%\), while slower trials (Trials 5 and 10) exhibit slightly higher non-monotonicity rates of \(21.7\%\) and \(20.8\%\), respectively. However, some slower trials, such as Trial 8 (296 iterations) and Trial 6 (258 iterations), have the lowest non-monotonic rates at \(14.3\%\) and \(14.5\%\). This suggests that a lower non-monotonic rate does not necessarily indicate faster or slower convergence, and the relationship between these factors is not strictly linear.
+
+\smallskip
+ 
+The maximum observed increase in objective function value shows considerable variation, ranging from \(33,181.46\) to \(148,695.49\). The largest function value increases are found in Trials 2, 8, and 9 (\(142,480.57\), \(148,695.49\), and \(144,895.98\), respectively), while the smallest function value increases occur in Trials 6 and 10 (\(33,420.93\) and \(33,181.46\)). There is no strong correlation between the total iterations to convergence and the magnitude of the maximum increase in objective value.
+
+\smallskip
+
+Overall, the results suggest that non-monotonic behavior is an inherent feature of the BB method, but its degree of occurrence varies across trials without a strictly predictable pattern. The method's efficiency appears to be independent of the precise non-monotonic rate, but large function value increases may be linked to faster convergence in some cases.
+
+\clearpage
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Q5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation of Parameters for Search Direction \texorpdfstring{\(\alpha_k, \beta_k, \gamma_k\)}{}}
+
+We consider the unconstrained minimization problem
+\[
+\min_{\mathbf{x} \in \mathbb{R}^n} f(\mathbf{x}),
+\]
+where the search direction at iteration \(k > 1\) is given by
+\[
+\mathbf{p}_k = -\alpha_k \mathbf{g}_k + \beta_k \mathbf{p}_{k-1} + \gamma_k \mathbf{p}_{k-2},
+\]
+and we want to estimate \(\alpha_k, \beta_k, \gamma_k\) such that \(\mathbf{p}_k\) approximates the Newton direction while keeping a per-iteration cost of \(\mathcal{O}(n^2)\).
+
+\subsubsection{Motivation and Overall Strategy}
+
+A Newton step requires solving
+\[
+\mathbf{H}_k \mathbf{p}_k^{\text{Newton}} = -\mathbf{g}_k, \quad \mathbf{H}_k \in \mathbb{R}^{n \times n},
+\]
+which generally costs \(\mathcal{O}(n^3)\) if we factor \(\mathbf{H}_k\). However, we can store and update \(\mathbf{H}_k\) (or its inverse) in \(\mathcal{O}(n^2)\) per iteration via a quasi-Newton scheme (e.g., BFGS). We then approximate the Newton direction by ensuring \(\mathbf{p}_k\) is “close” to \(- \mathbf{H}_k^{-1} \mathbf{g}_k\) in some small subspace.
+
+\subsubsection{Derivation of \texorpdfstring{\(\alpha_k, \beta_k, \gamma_k\)}{}}
+
+We begin with the quasi-Newton condition:
+\[
+\mathbf{H}_k \mathbf{p}_k \approx -\mathbf{g}_k,
+\]
+where \(\mathbf{H}_k\) is an approximate Hessian at iteration \(k\). To obtain the search direction \(\mathbf{p}_k\), we write
+\[
+\mathbf{p}_k = -\alpha_k \mathbf{g}_k + \beta_k \mathbf{p}_{k-1} + \gamma_k \mathbf{p}_{k-2}.
+\]
+
+\paragraph{Step 1: Form the Projection Vector}
+Before expanding \(\mathbf{p}_k\) in detail, we note that we want to \emph{project} the condition \(\mathbf{H}_k \mathbf{p}_k \approx -\mathbf{g}_k\) onto the directions \(\{\mathbf{g}_k, \mathbf{p}_{k-1}, \mathbf{p}_{k-2}\}\). Concretely, we impose:
+\[
+\begin{bmatrix}
+\mathbf{g}_k^T \\
+\mathbf{p}_{k-1}^T \\
+\mathbf{p}_{k-2}^T
+\end{bmatrix}
+\mathbf{H}_k \bigl(\mathbf{p}_k\bigr)
+=
+-\begin{bmatrix}
+\mathbf{g}_k^T \\
+\mathbf{p}_{k-1}^T \\
+\mathbf{p}_{k-2}^T
+\end{bmatrix}  \mathbf{g}_k
+\]
+This ensures that, in each of those three directions, the condition \(\mathbf{H}_k \mathbf{p}_k \approx -\mathbf{g}_k\) holds.
+
+\paragraph{Step 2: Substitute \(\mathbf{p}_k = -\alpha_k \mathbf{g}_k + \beta_k \mathbf{p}_{k-1} + \gamma_k \mathbf{p}_{k-2}\)}
+Expanding the left-hand side, we get:
+\[
+\begin{bmatrix}
+\mathbf{g}_k^T \\
+\mathbf{p}_{k-1}^T \\
+\mathbf{p}_{k-2}^T
+\end{bmatrix}
+\mathbf{H}_k \Bigl(-\alpha_k \mathbf{g}_k + \beta_k \mathbf{p}_{k-1} + \gamma_k \mathbf{p}_{k-2}\Bigr)
+=
+\begin{bmatrix}
+-\mathbf{g}_k^T \mathbf{g}_k \\
+-\mathbf{p}_{k-1}^T \mathbf{g}_k \\
+-\mathbf{p}_{k-2}^T \mathbf{g}_k
+\end{bmatrix}.
+\]
+This system is \(3 \times 3\) in the unknowns \(\alpha_k, \beta_k, \gamma_k\).
+
+\paragraph{Matrix Form (Using \(\mathbf{H}_k\))}
+Define:
+\[
+\mathbf{M}_k \;=\;
+\begin{bmatrix}
+\mathbf{g}_k^T \mathbf{H}_k \mathbf{g}_k & \mathbf{g}_k^T \mathbf{H}_k \mathbf{p}_{k-1} & \mathbf{g}_k^T \mathbf{H}_k \mathbf{p}_{k-2} \\[6pt]
+\mathbf{p}_{k-1}^T \mathbf{H}_k \mathbf{g}_k & \mathbf{p}_{k-1}^T \mathbf{H}_k \mathbf{p}_{k-1} & \mathbf{p}_{k-1}^T \mathbf{H}_k \mathbf{p}_{k-2} \\[6pt]
+\mathbf{p}_{k-2}^T \mathbf{H}_k \mathbf{g}_k & \mathbf{p}_{k-2}^T \mathbf{H}_k \mathbf{p}_{k-1} & \mathbf{p}_{k-2}^T \mathbf{H}_k \mathbf{p}_{k-2}
+\end{bmatrix},
+\quad
+\mathbf{r}_k \;=\;
+\begin{bmatrix}
+-\mathbf{g}_k^T \mathbf{g}_k \\[3pt]
+-\mathbf{p}_{k-1}^T \mathbf{g}_k \\[3pt]
+-\mathbf{p}_{k-2}^T \mathbf{g}_k
+\end{bmatrix}.
+\]
+Then we can write:
+\[
+\mathbf{M}_k
+\begin{bmatrix}
+-\alpha_k \\ \beta_k \\ \gamma_k
+\end{bmatrix}
+=
+\mathbf{r}_k.
+\]
+Solving this \(3 \times 3\) system yields \(\alpha_k, \beta_k, \gamma_k\).
+
+\paragraph{Inverse Hessian Variant}
+
+If we maintain \(\mathbf{H}_k^{-1}\) (the approximate inverse Hessian) instead of \(\mathbf{H}_k\), the condition becomes:
+\[
+\mathbf{p}_k \approx -\,\mathbf{H}_k^{-1} \mathbf{g}_k.
+\]
+Hence, the projection requirement changes accordingly:
+\[
+\begin{bmatrix}
+\mathbf{g}_k^T \\
+\mathbf{p}_{k-1}^T \\
+\mathbf{p}_{k-2}^T
+\end{bmatrix}
+\Bigl(\mathbf{p}_k\Bigr)
+\approx
+-\begin{bmatrix}
+\mathbf{g}_k^T \\
+\mathbf{p}_{k-1}^T \\
+\mathbf{p}_{k-2}^T
+\end{bmatrix}
+\mathbf{H}_k^{-1} \mathbf{g}_k.
+\]
+In expanded form, this leads to a vector equation:
+\[
+\begin{bmatrix}
+\mathbf{g}_k^T \\[2pt]
+\mathbf{p}_{k-1}^T \\[2pt]
+\mathbf{p}_{k-2}^T
+\end{bmatrix}
+\Bigl(-\alpha_k \mathbf{g}_k + \beta_k \mathbf{p}_{k-1} + \gamma_k \mathbf{p}_{k-2}\Bigr)
+=
+-\begin{bmatrix}
+\mathbf{g}_k^T \mathbf{H}_k^{-1} \mathbf{g}_k \\[2pt]
+\mathbf{p}_{k-1}^T \mathbf{H}_k^{-1} \mathbf{g}_k \\[2pt]
+\mathbf{p}_{k-2}^T \mathbf{H}_k^{-1} \mathbf{g}_k
+\end{bmatrix}.
+\]
+Again, this yields a system of size \(3 \times 3\) for \(\alpha_k, \beta_k, \gamma_k\). The only difference is that the right-hand side involves \(\mathbf{H}_k^{-1}\), rather than the left-hand side involving  \(\mathbf{H}_k\). The dimension of the system remains constant.
+
+\paragraph{Matrix Form (Using \(\mathbf{H}_k^{-1}\))}
+Define:
+\[
+\mathbf{M}_k' \;=\;
+\begin{bmatrix}
+\mathbf{g}_k^T \mathbf{g}_k & \mathbf{g}_k^T  \mathbf{p}_{k-1} & \mathbf{g}_k^T \mathbf{p}_{k-2} \\[6pt]
+\mathbf{p}_{k-1}^T \mathbf{g}_k & \mathbf{p}_{k-1}^T \mathbf{p}_{k-1} & \mathbf{p}_{k-1}^T \mathbf{p}_{k-2} \\[6pt]
+\mathbf{p}_{k-2}^T \mathbf{g}_k & \mathbf{p}_{k-2}^T  \mathbf{p}_{k-1} & \mathbf{p}_{k-2}^T  \mathbf{p}_{k-2}
+\end{bmatrix},
+\quad
+\mathbf{r}_k'\;=\;
+-\begin{bmatrix}
+\mathbf{g}_k^T \mathbf{H}_k^{-1} \mathbf{g}_k \\[2pt]
+\mathbf{p}_{k-1}^T \mathbf{H}_k^{-1} \mathbf{g}_k \\[2pt]
+\mathbf{p}_{k-2}^T \mathbf{H}_k^{-1} \mathbf{g}_k
+\end{bmatrix}.
+\]
+Then we can write:
+\[
+\mathbf{M}_k'
+\begin{bmatrix}
+-\alpha_k \\ \beta_k \\ \gamma_k
+\end{bmatrix}
+=
+\mathbf{r}_k'.
+\]
+Solving this \(3 \times 3\) system also yields \(\alpha_k, \beta_k, \gamma_k\).
+
+\paragraph{Conclusion}
+By projecting \(\mathbf{H}_k \mathbf{p}_k = -\mathbf{g}_k\) onto three directions, we solve a small system to find \(\alpha_k, \beta_k, \gamma_k\). This approach maintains the \(\mathcal{O}(n^2)\) bound per iteration and refines the search direction to better approximate the true Newton step than a simple gradient descent would.
+
+
+\subsubsection{Complexity and Implementation Details}
+
+\paragraph{Matrix Updates (\(\mathcal{O}(n^2)\)).}
+We store a full \(n \times n\) matrix \(\mathbf{H}_k\) or its inverse, updating it at each iteration (e.g., using BFGS). Each rank-one or rank-two update costs \(\mathcal{O}(n^2)\), fitting within our per-iteration budget.
+
+\paragraph{Vector-Matrix Products (\(\mathcal{O}(n^2)\)).}
+To compute \(\mathbf{H}_k \mathbf{g}_k\), \(\mathbf{H}_k \mathbf{p}_{k-1}\), and \(\mathbf{H}_k \mathbf{p}_{k-2}\) each iteration, we require three \(\mathcal{O}(n^2)\) operations, which also fits into the allowed cost.
+
+\paragraph{Solving the Small System (\(\mathcal{O}(1)\)).}
+The final step is solving a \(3 \times 3\) linear system for \(\alpha_k, \beta_k, \gamma_k\). This step is negligible compared to the \(\mathcal{O}(n^2)\) cost above.
+
+\bigskip
+
+Hence, each iteration remains \(\mathcal{O}(n^2)\), dominated by vector–matrix products and matrix updates, while ensuring \(\mathbf{p}_k\) is a good approximation of the Newton direction in a low-dimensional subspace.
+
+\subsubsection{Conclusion}
+
+By focusing on a small set of previous directions \(\{ \mathbf{g}_k, \mathbf{p}_{k-1}, \mathbf{p}_{k-2} \}\) and leveraging a quasi-Newton update to store or update \(\mathbf{H}_k\) in \(\mathcal{O}(n^2)\), we derive simple formulas for \(\alpha_k, \beta_k, \gamma_k\). This scheme:
+\begin{itemize}
+    \item Achieves an effective approximation to the Newton step.
+    \item Remains \(\mathcal{O}(n^2)\) per iteration.
+    \item Maintains a small (constant-size) system to solve for \(\alpha_k, \beta_k, \gamma_k\).
+\end{itemize}
+Thus, the proposed method satisfies the complexity requirements while improving the search direction beyond basic gradient-based approaches.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bonus
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Bonus (5 pts)}
+
+\noindent
+\textbf{Problem Statement:}
+\begin{quote}
+Extend the approach of Q5 to derive $\alpha_k, \beta_k, \gamma_k$ using only first-order derivatives (no finite differences or second-order approximations). Discuss whether the result always gives a valid descent direction.
+\end{quote}
+
+\noindent
+\textbf{Solution (Bonus):} \\
+\emph{[Write your solution here.]}
+
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End of Document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
